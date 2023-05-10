@@ -1,0 +1,17 @@
+# Utilisez une image de base avec Node.js préinstallé
+FROM node:18-alpine
+
+# Créez le répertoire de travail de l'application
+WORKDIR /home/app/userServer
+
+# Copiez les fichiers de l'application dans le conteneur
+COPY package*.json /
+COPY . .
+
+# Installez les dépendances de l'application
+RUN npm install
+# Exposez le port de l'application
+EXPOSE 3000
+
+# Démarrez l'application
+CMD ["npm", "start"]
