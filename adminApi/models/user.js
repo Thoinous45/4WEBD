@@ -12,7 +12,6 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-// userSchema.set("timestamps", true);
 
 userSchema.plugin(uniqueValidator);
 

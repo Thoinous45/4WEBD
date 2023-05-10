@@ -14,8 +14,8 @@ const complexityOptions = {
 
 const shemaRegister = Joi.object().keys({
   email: Joi.string().email().required(),
-  firstname: Joi.string().required().min(1).max(15),
-  lastname: Joi.string().required().min(1).max(15),
+  firstname: Joi.string().required().min(3).max(15),
+  lastname: Joi.string().required().min(3).max(15),
   password: passwordComplexity(complexityOptions),
   password_confirmation: Joi.any().equal(Joi.ref('password'))
     .required()
@@ -32,7 +32,6 @@ const shemaLogin = Joi.object().keys({
 
 const shemaModifyUser =Joi.object().keys({
   password: passwordComplexity(complexityOptions),
-  phoneNumber: Joi.string().required().min(10).max(10),
   firstname: Joi.string().required().min(1).max(15),
   lastname: Joi.string().required().min(1).max(15),
   password_confirmation: Joi.any().equal(Joi.ref('password'))

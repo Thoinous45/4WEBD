@@ -31,16 +31,6 @@ exports.authValidation = (req, res, next) => {
   }
 };
 
-exports.numberValidation = (req, res, next) => {
-  var regexNumber = new RegExp("^[0-9]+$");
-  let phoneNumber = req.body.phoneNumber;
-
-  if (regexNumber.test(phoneNumber)) {
-    next();
-  } else {
-    res.status(400).json({ error: "Veillez à utiliser un numéro valide" });
-  }
-};
 
 exports.firstnameValidation = (req, res, next) => {
   //right me a regex for firstname: letter and éèàçù with one - or space

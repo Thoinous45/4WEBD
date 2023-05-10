@@ -17,8 +17,6 @@ const adminDB = mongoose
   .then(() => console.log("Connecté à MongoDB ! 🌿"))
   .catch((err) => console.log(err));
 
-adminDB.model("User", userSchema)
-
 const app = express();
 app.use(helmet());
 app.use((req, res, next) => {
