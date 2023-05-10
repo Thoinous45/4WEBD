@@ -12,9 +12,8 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
-                phoneNumber: req.body.phoneNumber,
                 password: hash,
-                rights: "User",
+                right: "User",
             });
 
       user
@@ -41,7 +40,7 @@ exports.login = (req, res, next) => {
           return res.status(200).json({
             userId: user._id,
             token: jwt.sign(
-              { userId: user._id, userRights: user.rights },
+              { userId: user._id, userRight: user.right , userFirstname: user.firstname , userLastname: user.lastname},
               process.env.TOKEN_KEY,
               {
                 expiresIn: "2d",
@@ -88,7 +87,7 @@ exports.modifyUser = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     const userId = decodedToken.userId;
-    const userPower = decodedToken.userRights;
+    const userPower = decodedToken.userRight;
 
     User.findOne({_id: req.params.id}).then((user) => {
         if (user._id == userId || userPower === 1 || userPower === 2) {
@@ -117,72 +116,4 @@ exports.modifyUser = (req, res, next) => {
       });
     }
   });
-};
-
-exports.getOne = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    const userId = decodedToken.userId;
-    const userPower = decodedToken.userRights;
-
-  if (decodedToken) {
-    User.findOne({ _id: req.params.id })
-      .select("-password")
-      .then((user) => {
-        test = user._id;
-        if (userId == user._id || userPower === 1 || userPower === 2) {
-          res.status(200).json(user);
-        } else {
-          res
-            .status(401)
-            .json({
-              message: "vous n'avez pas les droits pour cette requête",
-              userId,
-              test,
-            });
-        }
-      })
-
-      .catch((err) =>
-        res
-          .status(401)
-          .json({ err, message: "erreur serveur ou identifiant invalide" })
-      );
-  } else {
-    res.status(401).json({
-      error:
-        "token invalide ou vous devez être login pour voir ces informations !",
-    });
-  }
-};
-
-//admin request
-
-exports.getAll = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    //vérif que l'utilisateur est log
-    const userPower = decodedToken.userRights;
-
-    if (decodedToken) {
-        User.find()
-            .select("-password")
-
-      .then((user) => {
-        if (userPower === 1 || userPower === 2) {
-          res.status(200).json(user);
-        } else {
-          res
-            .status(401)
-            .json({ message: "vous n'avez pas les droits pour cette requête" });
-        }
-      })
-
-            .catch((err) => res.status(401).json({err}));
-    } else {
-        res.status(401).json({
-            error:
-                "token invalide ou vous devez être login pour voir ces informations !",
-        });
-    }
 };

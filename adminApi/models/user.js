@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema(
     pseudo : {type:String , required :true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    rights: { type: String, required: true },
+    right: { type: String, required: true },
     
   },
   { timestamps: true }

@@ -13,7 +13,7 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 pseudo: req.body.pseudo,
                 password: hash,
-                rights: 0,
+                right: 0,
             });
 
       user
@@ -40,7 +40,7 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user._id,
             token: jwt.sign(
-              { userId: user._id, userRights: user.rights },
+              { userId: user._id, userRight: user.right },
               process.env.TOKEN_KEY,
               {
                 expiresIn: "2d",
@@ -88,7 +88,7 @@ exports.modifyUser = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     const userId = decodedToken.userId;
-    const userPower = decodedToken.userRights;
+    const userPower = decodedToken.userRight;
 
     User.findOne({_id: req.params.id}).then((user) => {
         if (user._id == userId || userPower === 1 || userPower === 2) {
@@ -121,7 +121,7 @@ exports.getOne = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     const userId = decodedToken.userId;
-    const userPower = decodedToken.userRights;
+    const userPower = decodedToken.userRight;
 
   if (decodedToken) {
     User.findOne({ _id: req.params.id })
@@ -160,7 +160,7 @@ exports.getAll = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     //vérif que l'utilisateur est log
-    const userPower = decodedToken.userRights;
+    const userPower = decodedToken.userRight;
 
     if (decodedToken) {
         User.find()

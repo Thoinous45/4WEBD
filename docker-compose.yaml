@@ -8,9 +8,9 @@ services:
     volumes:
       - ./nginxLB.conf:/etc/nginx/nginx.conf
     depends_on:
-      - tradeserver
+      - userserver
     links:
-      - tradeserver
+      - userserver
   
 
   mongodb:
@@ -58,34 +58,5 @@ services:
       - PORT=3000
      
 
-  tradeserver:
-    container_name: tradeserver
-    hostname: tradeserver
-    build: ./tradeServer
-    command : npm start
-    environment:
-      - DB_ACCESS=mongodb://root:toto@mongodb:27017
-      - PORT=3020
-    ports:
-      - 3020:3020
-
-  tradeserver2:
-    container_name: tradeserver2
-    build: ./tradeServer
-    command : npm start
-    environment:
-      - DB_ACCESS=mongodb://root:toto@mongodb:27017
-      - PORT=3021
-    ports:
-      - 3021:3021
-
-  accountserver:
-    container_name: accountserver
-    build: ./accountServer
-    environment:
-      - DB_ACCESS=mongodb://root:toto@mongodb:27017
-      - PORT=3010
-    ports:
-      - 3010:3010
-    
+  
 
