@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -69,7 +70,26 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEvent(Long eventId) {
-        Event eventToDelete = eventRepository.findById(eventId).orElseThrow();
-        eventRepository.delete(eventToDelete);
+        eventRepository.deleteById(eventId);
+    }
+
+    @Override
+    public boolean isBookingAvailable(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        return event.getNbOfPlaces() > 0 && event.getReservationLimitDate().after(new Date());
+    }
+
+    @Override
+    public void bookEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        event.setNbOfPlaces(event.getNbOfPlaces() - 1);
+        eventRepository.save(event);
+    }
+
+    @Override
+    public void revertEventBooking(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        event.setNbOfPlaces(event.getNbOfPlaces() + 1);
+        eventRepository.save(event);
     }
 }

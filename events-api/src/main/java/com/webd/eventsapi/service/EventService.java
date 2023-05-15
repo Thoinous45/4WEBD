@@ -19,4 +19,10 @@ public interface EventService {
     Event updateEvent(Event event);
 
     void deleteEvent(Long eventId);
+
+    boolean isBookingAvailable(Long eventId);
+
+    void bookEvent(Long eventId);
+
+    void revertEventBooking(Long eventId);
 }

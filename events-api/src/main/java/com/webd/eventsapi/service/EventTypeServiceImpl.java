@@ -32,7 +32,6 @@ public class EventTypeServiceImpl implements EventTypeService {
 
     @Override
     public void deleteEventType(Long eventTypeId) {
-        eventTypeRepository.findById(eventTypeId).orElseThrow();
         eventTypeRepository.deleteById(eventTypeId);
     }
 }

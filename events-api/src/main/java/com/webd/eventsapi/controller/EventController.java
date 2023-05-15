@@ -35,6 +35,23 @@ public class EventController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/book/{eventId}")
+    public ResponseEntity<Boolean> isBookingAvailable(@PathVariable Long eventId) {
+        if (eventService.isBookingAvailable(eventId)) {
+            // "pre-book" an event, the ticket service will be able to revert the booking if the user payment fails
+            eventService.bookEvent(eventId);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @PostMapping("/book/revert/{eventId}")
+    public ResponseEntity<Boolean> revertBooking(@PathVariable Long eventId) {
+        eventService.revertEventBooking(eventId);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> searchEvents(@RequestBody EventSearchRequest request, Pageable pageable) {
         Page<Event> page = eventService.searchEvents(request, pageable);
@@ -42,19 +59,19 @@ public class EventController {
     }
 
     @PostMapping
-    @RolesAllowed("{ADMIN, OPERATOR}")
+    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
     }
 
     @PutMapping
-    @RolesAllowed("{ADMIN, OPERATOR}")
+    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<Event> updateEvent(@RequestBody Event event) {
         return new ResponseEntity<>(eventService.updateEvent(event), HttpStatus.OK);
     }
 
     @DeleteMapping("/{eventId}")
-    @RolesAllowed("{ADMIN, OPERATOR}")
+    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<HttpStatus> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
