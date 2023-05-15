@@ -10,7 +10,6 @@ exports.createAdmin = (req, res, next) => {
     .then((hash) => {
       const user = new User({
         email: req.body.email,
-        pseudo: req.body.pseudo,
         password: hash,
         right: "Admin",
       });
@@ -73,7 +72,6 @@ exports.modifyUser = (req, res, next) => {
         .then((hash) => {
           const userMod = req.body
             ? {
-                pseudo: req.body.pseudo,
                 password: hash,
               }
             : { ...req.body };

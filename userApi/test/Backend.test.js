@@ -12,21 +12,12 @@ chai.use(chaiHttp);
 
 process.env.Test_TOKEN_KEY;
 
-describe("TestBackend", () => {
+describe("Test User", () => {
   // get userid + token to use in other tests
   let testToken = "testToken";
   let testUserId = "testUserId";
 
-  before(function (done) {
-    this.timeout(3000);
-    setTimeout(done, 2000);
-  });
-
-  beforeEach(function (chai) {
-    this.timeout(3000);
-    setTimeout(chai, 100);
-  });
-
+ 
   describe("Users", () => {
     //Before each test we set a delay to wait server to be ready
 
@@ -37,7 +28,8 @@ describe("TestBackend", () => {
     describe("/POST user signup", () => {
       it("it should not POST a user without email field", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           password: "password",
           password_confirmation: "password",
         };
@@ -58,7 +50,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user without password field", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test@email.com",
           password_confirmation: "password",
         };
@@ -79,7 +72,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user without password_confirmation field", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test@email.com",
           password: "password123!",
         };
@@ -98,8 +92,31 @@ describe("TestBackend", () => {
           });
       });
 
-      it("it should not POST a user without pseudo field", (done) => {
+      it("it should not POST a user without firstname field", (done) => {
         let user = {
+          lastname: "test",
+          email: "test.email.com",
+          password: "password123!",
+          password_confirmation: "password123!",
+        };
+        chai
+          .request(server)
+          .post("/api/users/signup")
+          .send(user)
+          .end((err, res) => {
+            res.should.have.status(406);
+            res.should.be.a("object");
+            res.body.should.have.property("err");
+            res.body.should.have
+              .property("msg")
+              .eql("veuillez vérifier votre email/password");
+            done();
+          });
+      });
+
+      it("it should not POST a user without lastname field", (done) => {
+        let user = {
+          firstname: "test",
           email: "test.email.com",
           password: "password123!",
           password_confirmation: "password123!",
@@ -121,7 +138,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user with wrong email", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test.email.com",
           password: "password123!",
           password_confirmation: "password123!",
@@ -143,7 +161,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user with wrong password", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test.email.com",
           password: "pass",
           password_confirmation: "pass",
@@ -165,7 +184,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user with wrong password_confirmation", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test.email.com",
           password: "password123!",
           password_confirmation: "pass",
@@ -187,7 +207,8 @@ describe("TestBackend", () => {
 
       it("it should POST a user", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test1@email.com",
           password: "password123!",
           password_confirmation: "password123!",
@@ -207,7 +228,8 @@ describe("TestBackend", () => {
 
       it("it should not POST a user with same email", (done) => {
         let user = {
-          pseudo: "test",
+          firstname: "test",
+          lastname: "test",
           email: "test1@email.com",
           password: "password123!",
           password_confirmation: "password123!",
@@ -347,73 +369,9 @@ describe("TestBackend", () => {
   });
   */
 
-    /**
-     * Test the /Get route
-     */
+    
 
-    describe("/GET user", () => {
-      it("it should GET a user with token", (done) => {
-        chai
-          .request(server)
-          .get("/api/users/" + testUserId)
-          .set({ Authorization: `Bearer ${testToken}` })
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a("object");
-            res.body.should.not.have.property("err");
-            res.body.should.have.property("pseudo");
-            res.body.should.have.property("email");
-            res.body.should.have.property("_id");
-            done();
-          });
-      });
-
-      it("it should not GET a user with wrong token", (done) => {
-        let user = {
-          email: "test1@email.com",
-          password: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/login")
-          .send(user)
-          .end((err, res) => {
-            chai
-              .request(server)
-              .get("/api/users/" + testUserId)
-              .set({ Authorization: `Bearer ${testToken}1` })
-              .end((err, res) => {
-                res.should.have.status(500);
-                done();
-              });
-          });
-      });
-
-      it("it should not GET a user with wrong id", (done) => {
-        let user = {
-          email: "test1@email.com",
-          password: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/login")
-          .send(user)
-          .end((err, res) => {
-            chai
-              .request(server)
-              .get("/api/users/" + testUserId + "1")
-              .set({ Authorization: `Bearer ${testToken}` })
-              .end((err, res) => {
-                res.should.have.status(401);
-                res.body.should.be.a("object");
-                res.body.should.have
-                  .property("message")
-                  .eql("erreur serveur ou identifiant invalide");
-                done();
-              });
-          });
-      });
-    });
+    
 
     /**
      * Test the /DELETE route

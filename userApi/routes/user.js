@@ -25,7 +25,7 @@ router.post("/signup",joi.userRegister,regex.authValidation,regex.firstnameValid
 //bouncer protect from brutforce
 router.post("/login",bouncer.block,joi.userLogin, userCtrl.login);
 router.delete("/delete/:id",auth,userCtrl.deleteUser)
-router.put("/modify/:id",auth,joi.userModify,regex.pseudoValidation,userCtrl.modifyUser)
+router.put("/modify/:id",auth,joi.userModify,userCtrl.modifyUser)
 
 
 

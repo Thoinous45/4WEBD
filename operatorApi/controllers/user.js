@@ -11,9 +11,8 @@ exports.signup = (req, res, next) => {
         .then((hash) => {
             const user = new User({
                 email: req.body.email,
-                pseudo: req.body.pseudo,
                 password: hash,
-                right: 0,
+                right: "Operator",
             });
 
       user
@@ -97,7 +96,6 @@ exports.modifyUser = (req, res, next) => {
                 .then((hash) => {
                     const userMod = req.body
                         ? {
-                            pseudo: req.body.pseudo,
                             password: hash,
                         }
                         : {...req.body};
@@ -115,72 +113,4 @@ exports.modifyUser = (req, res, next) => {
       });
     }
   });
-};
-
-exports.getOne = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    const userId = decodedToken.userId;
-    const userPower = decodedToken.userRight;
-
-  if (decodedToken) {
-    User.findOne({ _id: req.params.id })
-      .select("-password")
-      .then((user) => {
-        test = user._id;
-        if (userId == user._id || userPower === 1 || userPower === 2) {
-          res.status(200).json(user);
-        } else {
-          res
-            .status(401)
-            .json({
-              message: "vous n'avez pas les droits pour cette requête",
-              userId,
-              test,
-            });
-        }
-      })
-
-      .catch((err) =>
-        res
-          .status(401)
-          .json({ err, message: "erreur serveur ou identifiant invalide" })
-      );
-  } else {
-    res.status(401).json({
-      error:
-        "token invalide ou vous devez être login pour voir ces informations !",
-    });
-  }
-};
-
-//admin+SuperAdmin request
-
-exports.getAll = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    //vérif que l'utilisateur est log
-    const userPower = decodedToken.userRight;
-
-    if (decodedToken) {
-        User.find()
-            .select("-password")
-
-      .then((user) => {
-        if (userPower === 1 || userPower === 2) {
-          res.status(200).json(user);
-        } else {
-          res
-            .status(401)
-            .json({ message: "vous n'avez pas les droits pour cette requête" });
-        }
-      })
-
-            .catch((err) => res.status(401).json({err}));
-    } else {
-        res.status(401).json({
-            error:
-                "token invalide ou vous devez être login pour voir ces informations !",
-        });
-    }
 };
