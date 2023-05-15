@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/events-api
+    username: root
+    password:
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:db/data.sql
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+    defer-datasource-initialization: true
+
+application:
+  title: Events API
+  description: API to CRUD all information relative to events
+
+jwt:
+  secret-key: "c2VjcmV0c2hpdA=="
