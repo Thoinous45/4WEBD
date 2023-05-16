@@ -30,6 +30,8 @@ http://localhost:3001/api/
 - "/login" POST
 - "/modify/:id" PUT
 - "/createOperator" POST
+- "/:id" GET
+- "/" GET
 - "/user" GET
 - "/user/:id" GET
 - "/operator" GET

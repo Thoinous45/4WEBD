@@ -28,7 +28,7 @@ router.put("/modify/:id",auth,userCtrl.modifyAdmin)
 router.get("/:id",userCtrl.getOneAdmin)
 router.get("/operator/:id",userCtrl.getOneOperator)
 router.get("/user/:id",userCtrl.getOneUser)
-router.get("/admin", userCtrl.getAllAdmin);
+router.get("/", userCtrl.getAllAdmin);
 router.get("/operator", userCtrl.getAllOperator);
 router.get("/user", userCtrl.getAllUser);
 router.delete("/operator/:id",userCtrl.deleteOperator)
