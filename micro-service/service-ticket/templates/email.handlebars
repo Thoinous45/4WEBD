@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<body>
+<div>
+    <div style="background-color:#f2f2f2;margin:0;padding:0">
+        <table style="margin: 0 auto">
+            <tbody>
+            <tr>
+                <td style="padding:0 10px 0 10px;background-color:#f2f2f2">
+                    <table style="max-width:600px;width:100%">
+                        <tbody>
+                        <tr>
+                            <td style="background-color: #ffffff; text-align:center; padding:40px 20px 20px 20px;border-radius:4px 4px 0 0;color:#7c7975;font-family:Helvetica,Arial,sans-serif;font-size:48px;font-weight:400">
+                                <h1 style="font-size:32px;font-weight:400;margin:0">Achat confirme !</h1>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #F2F2F2;padding:0 10px 0 10px">
+                    <table style="width:100%; max-width:600px">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <table style="width:100%; max-width:600px">
+                                    <tbody>
+                                    <tr>
+                                        <td
+                                                style="background-color: #ffffff; padding:0 30px 20px 30px;color:#222;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.5">
+                                            <p>Madame, Monsieur,<br><br>Nous avons bien pris en compte votre achat
+                                                effectué sur
+                                                <a href="#"
+                                                   target="_blank">ticket.achat.com</a>
+                                                et nous vous remercions pour votre confiance.<br></p>
+                                            <p>Présentez-vous directement au contrôle muni de ce billet.</p>
+                                            <img id="qrcode" alt="qrcode" src="cid:qrcode" style="display:block;margin:0 auto;padding:30px 0;background:#fff;max-width:180px;height:auto"/>
+                                            <p>Présentez ce QR code pour accéder à votre séance</p>
+                                            <p><strong>Vous trouverez ci-dessous le détail de votre achat :</strong><br>
+                                            </p>
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td style="padding-left:1em; line-height: 0.7">
+                                                        <p><strong>Commande n°{{ticket_id}}</strong></p>
+                                                        <p>{{event_type}}</p>
+                                                        <p><strong>{{event_name}}</strong></p>
+                                                        <p>{{event_date}}</p>
+                                                        <p>{{event_place}}</p>
+                                                        <p>Mode de réglement : {{payment_method}}</p>
+                                                        <p>Client : <strong>{{user}}</strong></p>
+                                                        <p>N° de reservation : <strong>{{number_reservation}}</strong></p>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <p><strong style="color:red">Votre e-billet est en pièce jointe de ce mail
+                                                au format PDF</strong></p>
+                                            <p><strong style="color:red">Rendez-vous directement au point de contrôle
+                                                !</strong></p>
+                                            <p>Vous pouvez présenter directement au point de contrôle le QR CODE présent
+                                                sur votre application, ou dans le PDF du mail de confirmation.</p>
+                                            <p><strong>Tout document justifiant le bénéfice d'un tarif réduit pourra
+                                                vous étre demandé lors de votre passage au point de contrôle.</strong>
+                                            </p>
+                                            <p>Nous vous souhaitons d'avance une très bonne séance,</p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
