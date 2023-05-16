@@ -32,32 +32,20 @@ services:
       - booking
 
   
-  mongodb:
-    image: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongodb_data:/data/db
-    restart: 
-      - on-failure
-    networks:
-      - booking
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_DATABASE=booking
 
 
   user-api:
     container_name: user-api
     build: userApi/.
     restart: on-failure
+    depends_on:
+      - serviceName
     ports:
       - "3001:3001"
     networks:
       - booking
-    depends_on:
-      - serviceName
+    secrets:
+      - user-api-secret
 
   operator-api:
     container_name: operator-api
@@ -67,19 +55,20 @@ services:
       - "3002:3002"
     networks:
       - booking
+    secrets:
+      - operator-api-secret
 
+    
   admin-api:
     container_name: admin-api
     build: adminApi/.
     restart: on-failure
-    environment:
-      - PORT=3003
-      - TOKEN_Key = "yF_0Q4yG1y1I8QucdiufhLItC5i5yKNL9908p8Qym3zAWHxDyjpfIzBgfIwL06c7mQMW2WWkAPowAhAhN-QDIvwivvyT9fMy1KhLIRQd_EY8RSd3VWsHU1jJsrDaC5pjMoVGxcyvNMBl-WG4CIT40vX54NiwUls3pJhzrvCOmKk"
-      - DB_Access =
     ports:
       - "3003:3003"
     networks:
       - booking
+    secrets:
+      - admin-api-secret
 
   test-client:
     container_name: test-client
@@ -98,3 +87,13 @@ volumes:
 networks:
   booking:
     name: booking
+
+
+
+secrets:
+  operator-api-secret:
+    file: ./operatorApi/.env
+  user-api-secret:
+    file: ./userApi/.env
+  admin-api-secret:
+    file: ./adminApi/.env
