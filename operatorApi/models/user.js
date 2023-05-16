@@ -5,7 +5,7 @@ const operatorSchema = mongoose.Schema(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    right: { type: Number, required: true },
+    right: { type: String, required: true },
   },
   { timestamps: true }
 );
