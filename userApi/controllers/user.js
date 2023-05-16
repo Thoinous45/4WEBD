@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
               },
               process.env.TOKEN_KEY,
               {
-                expiresIn: "2d",
+                expiresIn: "1d",
               }
             ),
           });
@@ -99,34 +99,24 @@ exports.modifyUser = (req, res, next) => {
     .then((user) => {
       if (user._id == userId) {
         let userMod = null;
-        if (req.body.password == null) {
-          then(() => {
+        bcrypt
+          .hash(req.body.password, 10)
+          .then((hash) => {
             userMod = req.body
               ? {
                   firstname: req.body.firstname,
                   lastname: req.body.lastname,
+                  password: hash,
                 }
               : { ...req.body };
-          });
-        } else {
-          bcrypt
-            .hash(req.body.password, 10)
-            .then((hash) => {
-              userMod = req.body
-                ? {
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname,
-                    password: hash,
-                  }
-                : { ...req.body };
-            })
-            .catch((error) => res.status(500).json({ error }));
-        }
-        User.updateOne({ ...userMod, _id: req.params.id })
-          .then(() =>
-            res.status(201).json({ message: "Utilisateur modifié !" })
-          )
-          .catch((err) => res.status(401).json({ err }));
+
+            User.findOneAndUpdate({ _id: req.params.id, ...userMod })
+              .then(() =>
+                res.status(201).json({ message: "Utilisateur modifié !" })
+              )
+              .catch((error) => res.status(500).json({ error }));
+          })
+          .catch((error) => res.status(500).json({ error }));
       } else {
         res.status(401).json({
           message: "Vous ne disposez pas des droits pour modifier cet user!",
@@ -134,6 +124,8 @@ exports.modifyUser = (req, res, next) => {
       }
     })
     .catch((error) =>
-      res.status(500).json({ message: "erreur ID utilisateur", error })
+      res
+        .status(500)
+        .json({ message: "erreur ID utilisateur ou serveur", error })
     );
 };

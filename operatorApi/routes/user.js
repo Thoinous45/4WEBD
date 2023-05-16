@@ -20,8 +20,8 @@ const auth=require("../middleware/auth")
 
 //bouncer protect from brutforce
 router.post("/login",bouncer.block,joi.userLogin, userCtrl.login);
-router.delete("/delete/:id",auth,userCtrl.deleteUser)
-router.put("/modify/:id",auth,joi.userModify,regex.pseudoValidation,userCtrl.modifyUser)
+router.delete("/delete/:id",auth,userCtrl.deleteOperator)
+router.put("/modify/:id",auth,joi.userModify,regex.pseudoValidation,userCtrl.modifyOperator)
 
 
 

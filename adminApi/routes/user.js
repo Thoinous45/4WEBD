@@ -19,17 +19,19 @@ const auth=require("../middleware/auth")
 
 //admin route
 
-router.post("/signup", userCtrl.createAdmin);
-router.post("/signup/operator",joi.userRegister,regex.authValidation,auth, userCtrl.createOperator);
+router.post("/signup",joi.userRegister,regex.authValidation, userCtrl.createAdmin);
+router.post("/createOperator",regex.authValidation, userCtrl.createOperator);
 //bouncer protect from brutforce
 router.post("/login",bouncer.block,joi.userLogin, userCtrl.login);
+router.put("/update/:id",auth,userCtrl.modifyAdmin)
 
-router.get("/admin/:id",userCtrl.getOneAdmin)
+router.get("/:id",userCtrl.getOneAdmin)
 router.get("/operator/:id",userCtrl.getOneOperator)
 router.get("/user/:id",userCtrl.getOneUser)
 router.get("/admin", userCtrl.getAllAdmin);
 router.get("/operator", userCtrl.getAllOperator);
 router.get("/user", userCtrl.getAllUser);
+router.delete("/operator",userCtrl.deleteOperator)
 
 
 

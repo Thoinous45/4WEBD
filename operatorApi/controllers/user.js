@@ -1,13 +1,13 @@
-const User = require("../models/user");
+const Operator = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const bouncer = require("express-bouncer")(120000, 1.8e6, 5);
 
-//user+admin+SuperAdmin request
+//Operator Request
 
 
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  Operator.findOne({ email: req.body.email })
     .then((user) => {
       bcrypt
         .compare(req.body.password, user.password)
@@ -40,12 +40,12 @@ exports.login = (req, res, next) => {
     );
 };
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteOperator = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     const userId = decodedToken.userId;
 
-  User.findOne({ _id: req.params.id })
+  Operator.findOne({ _id: req.params.id })
     .then((user) => {
       if (user._id == userId) {
         user
@@ -61,14 +61,14 @@ exports.deleteUser = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-exports.modifyUser = (req, res, next) => {
+exports.modifyOperator = (req, res, next) => {
     console.log(req)
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
     const userId = decodedToken.userId;
     const userPower = decodedToken.userRight;
 
-    User.findOne({_id: req.params.id}).then((user) => {
+    Operator.findOne({_id: req.params.id}).then((user) => {
         if (user._id == userId || userPower === 1 || userPower === 2) {
             bcrypt
                 .hash(req.body.password, 10)
@@ -79,7 +79,7 @@ exports.modifyUser = (req, res, next) => {
                         }
                         : {...req.body};
 
-          User.updateOne({ ...userMod, _id: req.params.id })
+          Operator.updateOne({ ...userMod, _id: req.params.id })
             .then(() =>
               res.status(201).json({ message: "Utilisateur modifié !" })
             )
