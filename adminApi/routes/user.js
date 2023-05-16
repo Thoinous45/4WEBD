@@ -17,18 +17,19 @@ const joi = require("../middleware/joi");
 const regex = require("../middleware/regex");
 const auth=require("../middleware/auth")
 
-//user+admin route
+//admin route
 
-router.post("/signup",joi.userRegister,regex.authValidation, userCtrl.createAdmin);
+router.post("/signup", userCtrl.createAdmin);
+router.post("/signup/operator",joi.userRegister,regex.authValidation,auth, userCtrl.createOperator);
 //bouncer protect from brutforce
 router.post("/login",bouncer.block,joi.userLogin, userCtrl.login);
 
-router.get("/:id",userCtrl.getOne)
-router.put("/modify/:id",auth,joi.userModify,regex.pseudoValidation,userCtrl.modifyUser)
-
-
-//admin route
-router.get("", userCtrl.getAll);
+router.get("/admin/:id",userCtrl.getOneAdmin)
+router.get("/operator/:id",userCtrl.getOneOperator)
+router.get("/user/:id",userCtrl.getOneUser)
+router.get("/admin", userCtrl.getAllAdmin);
+router.get("/operator", userCtrl.getAllOperator);
+router.get("/user", userCtrl.getAllUser);
 
 
 

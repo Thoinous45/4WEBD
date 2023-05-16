@@ -17,9 +17,7 @@ const joi = require("../middleware/joi");
 const regex = require("../middleware/regex");
 const auth=require("../middleware/auth")
 
-//Operator route
 
-router.post("/signup",joi.userRegister,regex.authValidation, userCtrl.signup);
 //bouncer protect from brutforce
 router.post("/login",bouncer.block,joi.userLogin, userCtrl.login);
 router.delete("/delete/:id",auth,userCtrl.deleteUser)

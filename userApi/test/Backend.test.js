@@ -320,7 +320,8 @@ describe("Test User", () => {
     describe("/PUT user", () => {
       it("it should not PUT a user with wrong token", (done) => {
         let moduser = {
-          pseudo: "test2",
+          firstname: "test2",
+          lastname: "test2",
           password: "password123!",
           password_confirmation: "password123!",
         };
@@ -340,34 +341,7 @@ describe("Test User", () => {
           });
       });
 
-//need to be deprecated to active next test
     });
-
-    //error on modifie user , have to check this later
-    /** 
-  
-    it("it should PUT a user", (done) => {
-      let moduser = {
-        pseudo: "test2",
-        password: "password123!",
-        password_confirmation: "password123!",
-      };
-
-      chai
-        .request(server)
-        .put("/api/users/modify/" + testUserId)
-        .set({ Authorization: `Bearer ${testToken}` })
-        .send(moduser)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.not.have.property("err");
-          res.body.should.have.property("message").eql("Utilisateur modifié !");
-          done();
-     });   
-    });
-  });
-  */
 
     
 

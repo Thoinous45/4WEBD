@@ -5,16 +5,16 @@ const jwt = require("jsonwebtoken");
 //user+admin+SuperAdmin request
 
 exports.signup = (req, res, next) => {
-    bcrypt
-        .hash(req.body.password, 10)
-        .then((hash) => {
-            const user = new User({
-                email: req.body.email,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                password: hash,
-                right: "User",
-            });
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) => {
+      const user = new User({
+        email: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        password: hash,
+        right: "User",
+      });
 
       user
         .save()
@@ -40,7 +40,13 @@ exports.login = (req, res, next) => {
           return res.status(200).json({
             userId: user._id,
             token: jwt.sign(
-              { userId: user._id, userRight: user.right , userFirstname: user.firstname , userLastname: user.lastname},
+              {
+                userId: user._id,
+                userRight: user.right,
+                userFirstname: user.firstname,
+                userLastname: user.lastname,
+                userEmail: user.email,
+              },
               process.env.TOKEN_KEY,
               {
                 expiresIn: "2d",
@@ -49,9 +55,11 @@ exports.login = (req, res, next) => {
           });
         })
         .catch((error) =>
-          res
-            .status(400)
-            .json({ error, message: "erreur serveur ou identifiant invalide" , user})
+          res.status(400).json({
+            error,
+            message: "erreur serveur ou identifiant invalide",
+            user,
+          })
         );
     })
     .catch((error) =>
@@ -62,9 +70,9 @@ exports.login = (req, res, next) => {
 };
 
 exports.deleteUser = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    const userId = decodedToken.userId;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  const userId = decodedToken.userId;
 
   User.findOne({ _id: req.params.id })
     .then((user) => {
@@ -83,37 +91,49 @@ exports.deleteUser = (req, res, next) => {
 };
 
 exports.modifyUser = (req, res, next) => {
-    console.log(req)
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-    const userId = decodedToken.userId;
-    const userPower = decodedToken.userRight;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  const userId = decodedToken.userId;
 
-    User.findOne({_id: req.params.id}).then((user) => {
-        if (user._id == userId || userPower === 1 || userPower === 2) {
-            bcrypt
-                .hash(req.body.password, 10)
-                .then((hash) => {
-                    const userMod = req.body
-                        ? {
-                            firstname: req.body.firstname,
-                            lastname: req.body.lastname,
-                            phoneNumber: req.body.phoneNumber,
-                            password: hash,
-                        }
-                        : {...req.body};
-
-          User.updateOne({ ...userMod, _id: req.params.id })
-            .then(() =>
-              res.status(201).json({ message: "Utilisateur modifié !" })
-            )
-            .catch((err) => res.status(401).json({ err }));
-        })
-        .catch((error) => res.status(500).json({ error }));
-    } else {
-      res.status(401).json({
-        message: "Vous ne disposez pas des droits pour modifier cet user!",
-      });
-    }
-  });
+  User.findOne({ _id: req.params.id })
+    .then((user) => {
+      if (user._id == userId) {
+        let userMod = null;
+        if (req.body.password == null) {
+          then(() => {
+            userMod = req.body
+              ? {
+                  firstname: req.body.firstname,
+                  lastname: req.body.lastname,
+                }
+              : { ...req.body };
+          });
+        } else {
+          bcrypt
+            .hash(req.body.password, 10)
+            .then((hash) => {
+              userMod = req.body
+                ? {
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    password: hash,
+                  }
+                : { ...req.body };
+            })
+            .catch((error) => res.status(500).json({ error }));
+        }
+        User.updateOne({ ...userMod, _id: req.params.id })
+          .then(() =>
+            res.status(201).json({ message: "Utilisateur modifié !" })
+          )
+          .catch((err) => res.status(401).json({ err }));
+      } else {
+        res.status(401).json({
+          message: "Vous ne disposez pas des droits pour modifier cet user!",
+        });
+      }
+    })
+    .catch((error) =>
+      res.status(500).json({ message: "erreur ID utilisateur", error })
+    );
 };

@@ -10,185 +10,17 @@ const { beforeEach } = require("mocha");
 chai.should();
 chai.use(chaiHttp);
 
-process.env.Test_TOKEN_KEY;
 
-describe("TestBackend", () => {
+describe("Test User", () => {
   // get userid + token to use in other tests
   let testToken = "testToken";
   let testUserId = "testUserId";
 
-  
-
+ 
   describe("Users", () => {
     //Before each test we set a delay to wait server to be ready
 
-    /**
-     * Test the /POST signup route
-     */
-
-    describe("/POST user signup", () => {
-      it("it should not POST a user without email field", (done) => {
-        let user = {
-          password: "password",
-          password_confirmation: "password",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      it("it should not POST a user without password field", (done) => {
-        let user = {
-          email: "test@email.com",
-          password_confirmation: "password",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      it("it should not POST a user without password_confirmation field", (done) => {
-        let user = {
-          email: "test@email.com",
-          password: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      
-
-      it("it should not POST a user with wrong email", (done) => {
-        let user = {
-          email: "test.email.com",
-          password: "password123!",
-          password_confirmation: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      it("it should not POST a user with wrong password", (done) => {
-        let user = {
-          email: "test.email.com",
-          password: "pass",
-          password_confirmation: "pass",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      it("it should not POST a user with wrong password_confirmation", (done) => {
-        let user = {
-          email: "test.email.com",
-          password: "password123!",
-          password_confirmation: "pass",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(406);
-            res.should.be.a("object");
-            res.body.should.have.property("err");
-            res.body.should.have
-              .property("msg")
-              .eql("veuillez vérifier votre email/password");
-            done();
-          });
-      });
-
-      it("it should POST a user", (done) => {
-        let user = {
-          email: "test1@email.com",
-          password: "password123!",
-          password_confirmation: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(201);
-            res.body.should.be.a("object");
-            res.body.should.not.have.property("err");
-            res.body.should.have.property("message").eql("Utilisateur créé !");
-            done();
-          });
-      });
-
-      it("it should not POST a user with same email", (done) => {
-        let user = {
-          email: "test1@email.com",
-          password: "password123!",
-          password_confirmation: "password123!",
-        };
-        chai
-          .request(server)
-          .post("/api/users/signup")
-          .send(user)
-          .end((err, res) => {
-            res.should.have.status(401);
-            res.body.should.be.a("object");
-            res.body.should.have.property("err");
-            done();
-          });
-      });
-    });
+    //You need to create a test user before with test1@email.com and password123! or start admin test because Operator are only created on admin side
 
     /**
      * Test the /POST login route
@@ -263,6 +95,8 @@ describe("TestBackend", () => {
     describe("/PUT user", () => {
       it("it should not PUT a user with wrong token", (done) => {
         let moduser = {
+          firstname: "test2",
+          lastname: "test2",
           password: "password123!",
           password_confirmation: "password123!",
         };
@@ -281,14 +115,13 @@ describe("TestBackend", () => {
             done();
           });
       });
+
     });
 
-
-    /**
-     * Test the /Get route
-     */
+    
 
     
+
     /**
      * Test the /DELETE route
      */

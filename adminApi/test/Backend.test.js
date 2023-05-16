@@ -318,7 +318,6 @@ describe("TestBackend", () => {
           });
       });
 
-//need to be deprecated to active next test
     });
 
     //error on modifie user , have to check this later

@@ -1,22 +1,11 @@
 const express = require("express");
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const userRoutes = require("./routes/user");
-const userSchema = require("./models/user");
-
-
+const connectionDB = require("./dbAccess");
 
 require("dotenv").config();
-
-const adminDB = mongoose
-  .connect(process.env.DB_ACCESS, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connecté à MongoDB ! 🌿"))
-  .catch((err) => console.log(err));
-
+  
 const app = express();
 app.use(helmet());
 app.use((req, res, next) => {

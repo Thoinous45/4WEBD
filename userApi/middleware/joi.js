@@ -35,7 +35,6 @@ const shemaModifyUser =Joi.object().keys({
   firstname: Joi.string().required().min(1).max(15),
   lastname: Joi.string().required().min(1).max(15),
   password_confirmation: Joi.any().equal(Joi.ref('password'))
-    .required()
     .label('Confirm password')
     .messages({ 'any.only': '{{#label}} does not match' })
 })

@@ -5,27 +5,6 @@ const bouncer = require("express-bouncer")(120000, 1.8e6, 5);
 
 //user+admin+SuperAdmin request
 
-exports.signup = (req, res, next) => {
-    bcrypt
-        .hash(req.body.password, 10)
-        .then((hash) => {
-            const user = new User({
-                email: req.body.email,
-                password: hash,
-                right: "Operator",
-            });
-
-      user
-        .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-        .catch((err) => res.status(401).json({ err }));
-    })
-    .catch((error) =>
-      res
-        .status(500)
-        .json({ error, message: "erreur serveur ou donnée invalide" })
-    );
-};
 
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
