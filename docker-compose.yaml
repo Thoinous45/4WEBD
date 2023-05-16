@@ -1,62 +1,30 @@
 version: "3.8"
+
 services:
-  loadbalencer:
-    image: nginx:latest
-    container_name: loadbalencer
+  events-db:
+    container_name: events-db
+    image: mysql
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=events-api
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_TCP_PORT=3308
     ports:
-      - 8080:8080
+      - "3308:3308"
+    expose:
+      - "3308"
     volumes:
-      - ./nginxLB.conf:/etc/nginx/nginx.conf
+      - events-db:/var/lib/mysql
+  events-api:
+    container_name: events-api
     depends_on:
-      - userserver
-    links:
-      - userserver
-  
-
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    secrets:
-      - mongodb_root_password
-      - mongodb_root_username
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=toto
+      - events-db
+    build: events-api/.
+    restart: on-failure
     ports:
-      - 27017:27017
-    
-  mongodb-express:
-    image: mongo-express
-    container_name: mongodb-express
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=toto
-    ports:
-      - 8082:8082
+      - "8080:8080"
 
-  userserver:
-    hostname: userserver
-    container_name: userserver
-    build: ./userServer
-    command : npm start
-    ports:
-      - 3000:3000
-    environment:
-      - DB_ACCESS=mongodb://root:toto@mongodb:27017
-      - PORT=3000
-
-  userserver2:
-    hostname: userserver
-    container_name: userserver2
-    build: ./userServer
-    command : npm start
-    ports:
-      - 3001:3000
-    environment:
-      - DB_ACCESS=mongodb://root:toto@mongodb:27017
-      - PORT=3000
-     
-
-  
-
+volumes:
+    events-db:

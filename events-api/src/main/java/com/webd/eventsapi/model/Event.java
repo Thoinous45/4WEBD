@@ -32,6 +32,9 @@ public class Event {
     @NotNull
     private int nbOfPlaces;
 
+    @NotNull
+    private double ticketPrice;
+
     @ManyToOne
     private EventType eventType;
 

@@ -36,20 +36,20 @@ public class EventController {
     }
 
     @GetMapping("/book/{eventId}")
-    public ResponseEntity<Boolean> isBookingAvailable(@PathVariable Long eventId) {
+    public ResponseEntity<HttpStatus> isBookingAvailable(@PathVariable Long eventId) {
         if (eventService.isBookingAvailable(eventId)) {
             // "pre-book" an event, the ticket service will be able to revert the booking if the user payment fails
             eventService.bookEvent(eventId);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
     @PostMapping("/book/revert/{eventId}")
-    public ResponseEntity<Boolean> revertBooking(@PathVariable Long eventId) {
+    public ResponseEntity<HttpStatus> revertBooking(@PathVariable Long eventId) {
         eventService.revertEventBooking(eventId);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/search")
