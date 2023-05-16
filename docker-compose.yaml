@@ -1,0 +1,49 @@
+version: "3.8"
+name: booking
+
+services:
+  events-db:
+    container_name: events-db
+    image: mysql
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=events-api
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_TCP_PORT=3308
+    ports:
+      - "3308:3308"
+    expose:
+      - "3308"
+    volumes:
+      - events-db:/var/lib/mysql
+    networks:
+      - booking
+  events-api:
+    container_name: events-api
+    depends_on:
+      - events-db
+    build: events-api/.
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    networks:
+      - booking
+  test-client:
+    container_name: test-client
+    image: appropriate/curl
+    hostname: test-client
+    depends_on:
+      - events-api
+    command: ["sh", "-c", "sleep 20 && curl -s http://events-api:8080/api/events/book/1"]
+    networks:
+      - booking
+
+volumes:
+    events-db:
+      name: events-db
+
+networks:
+  booking:
+    name: booking
