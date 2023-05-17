@@ -3,7 +3,7 @@
 ## Quickstart SANS DOCKER
 
 - A la racine du dossier, créer un fichier `.env` qui devra contenir 2 lignes :
-(fournie dans le cadre du projet 4WEBD pour vous simplifier la vie)
+(fournie dans le cadre du projet 4WEBD pour vous simplifier la vie , je vous ai laisser ma BDD mongo en service si vous ne voulez pas la changer)
 
 ```
 DB_ACCESS="string de connexion mongoDB"
@@ -17,7 +17,8 @@ _Pour générer la clé de chiffrement [voir ici](https://mkjwk.org/)_
 
 ## Quickstart AVEC DOCKER
 
--normalement nous vous avons déjà tous mis à disposition il vous suffit de lancer le docker compose.
+-Normalement nous vous avons déjà tous mis à disposition il vous suffit de lancer le docker compose.
+-le `.env` est utiliser pour les secrets 
 
 #### Vous pouvez utiliser l'API 👍
 
