@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class LocalhostFilter extends OncePerRequestFilter {
 
-    private final List<String> allowedHosts = List.of("tickets-api.booking");
+    private final List<String> allowedHosts = List.of("api-tickets.booking");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

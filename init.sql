@@ -7,7 +7,6 @@ create table if not exists tickets
     lastname           varchar(200) not null,
     event_id           int          null,
     date               varchar(200) null,
-    type               varchar(200) null,
     payment            varchar(200) null,
     event_name         varchar(200) null,
     number_reservation varchar(200) null,

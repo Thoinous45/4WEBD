@@ -30,7 +30,6 @@ const sendEmailToClient = async (ticket_info, address, callback) => {
     const ticket_id = ticket_info.ticket_id
     const event_date = ticket_info.date
     const event_name = ticket_info.event_name
-    const event_type = ticket_info.type
     const event_place = address
     const user = ticket_info.firstname + " " + ticket_info.lastname
     const payment_method = ticket_info.payment
@@ -76,7 +75,6 @@ const sendEmailToClient = async (ticket_info, address, callback) => {
             user: user,
             ticket_id: ticket_id,
             event_name: event_name,
-            event_type: event_type,
             event_date: event_date,
             event_place: event_place,
             event_price: event_price,
@@ -97,7 +95,7 @@ const checkIfHeCanBuyTicket = async (price, numberCard, end_validity_date, cvv, 
     if (price === null || price === undefined) {
         callback(false)
     } else {
-        await Axios.post("http://localhost:3506/api/payment", {
+        await Axios.post("http://api-tickets:3506/api/payment", {
             price: price,
             numberCard: numberCard,
             end_validity_date: end_validity_date,
@@ -114,8 +112,9 @@ const checkIfHeCanBuyTicket = async (price, numberCard, end_validity_date, cvv, 
 
 }
 const checkEvent = async (event_id, callback) => {
+    console.log('here')
     try {
-        await Axios.get("http://localhost:8080/api/events/" + event_id).then((response) => {
+        await Axios.get("http://events-api:8080/api/events/" + event_id).then((response) => {
             if (response.data) {
                 callback(response.data)
             } else {
@@ -127,7 +126,7 @@ const checkEvent = async (event_id, callback) => {
     }
 }
 const bookAnAwaitTicket = async (id_event , callback) => {
-    await Axios.get("http://localhost:8080/api/events/book/" + id_event).then((response) => {
+    await Axios.get("http://events-api:8080/api/events/book/" + id_event).then((response) => {
         if (response.status === 200) {
             callback(true)
        } else {
@@ -136,7 +135,7 @@ const bookAnAwaitTicket = async (id_event , callback) => {
     })
 }
 const userCantByTicket = (event_id) => {
-    Axios.post("http://localhost:8080/api/events/book/revert/" + event_id).then((response) => {
+    Axios.post("http://events-api:8080/api/events/book/revert/" + event_id).then((response) => {
         if (response.status === 200) {
             console.log("ok")
         } else {
@@ -144,13 +143,13 @@ const userCantByTicket = (event_id) => {
         }
     })
 }
-const insertTicket = (user_id, firstname, lastname, event_id, email, date, type, payment, event_name,ticketPrice, callback) => {
+const insertTicket = (user_id, firstname, lastname, event_id, email, date, payment, event_name,ticketPrice, callback) => {
     const insert_value = () => {
         const random = Math.floor(Math.random() * 1000000000000000000000)
         const number_reservation = "RESERVATION" + random
 
-        const values = [user_id, firstname, lastname, event_id, email, date.toString(), type, payment, event_name, number_reservation,ticketPrice]
-        const sql = "INSERT INTO tickets (user_id, firstname, lastname, event_id, email, date, type, payment, event_name, number_reservation, price ) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+        const values = [user_id, firstname, lastname, event_id, email, date.toString(), payment, event_name, number_reservation,ticketPrice]
+        const sql = "INSERT INTO tickets (user_id, firstname, lastname, event_id, email, date, payment, event_name, number_reservation, price ) VALUES (?,?,?,?,?,?,?,?,?,?)"
         db.query(sql, values, (err, results) => {
             if (err) {
                 insert_value()
@@ -159,7 +158,6 @@ const insertTicket = (user_id, firstname, lastname, event_id, email, date, type,
                 const ticket_id = results.insertId
                 const sql = "SELECT * FROM tickets WHERE ticket_id = ?"
                 db.query(sql, ticket_id, (err, results) => {
-                    console.log("Ouiiii: ",results[0])
                     callback(results[0])
                 })
             }
@@ -189,8 +187,6 @@ const createTicket = (req, res) => {
         const reservationLimitDate = event.reservationLimitDate
         const ticketPrice = event.ticketPrice
         const nbOfPlaces = event.nbOfPlaces
-        const typeConcert = event.eventType.name
-
         const numberCard = req.body.numberCard
         const end_validity_date = req.body.end_validity_date
         const cvv = req.body.cvv
@@ -214,7 +210,7 @@ const createTicket = (req, res) => {
                     return res.status(400).json({message: result.message})
                 }
 
-                await insertTicket(user_id, firstname, lastname, event_id, email,startDate, typeConcert, "Carte bleue", event_name,ticketPrice, (result) => {
+                await insertTicket(user_id, firstname, lastname, event_id, email,startDate, "Carte bleue", event_name,ticketPrice, (result) => {
                     sendEmailToClient(result, address, (result) => {
                         if (!result) {
                             return res.status(400).json({message: "New ticket add / Error when sending email"})

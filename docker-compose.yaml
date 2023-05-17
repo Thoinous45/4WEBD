@@ -28,18 +28,15 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
+    expose:
+      - "8080"
     networks:
       - booking
-
-  
-
 
   user-api:
     container_name: user-api
     build: userApi/.
     restart: on-failure
-    depends_on:
-      - serviceName
     ports:
       - "3001:3001"
     networks:
@@ -58,7 +55,7 @@ services:
     secrets:
       - operator-api-secret
 
-    
+
   admin-api:
     container_name: admin-api
     build: adminApi/.
@@ -70,22 +67,76 @@ services:
     secrets:
       - admin-api-secret
 
-  test-client:
-    container_name: test-client
-    image: appropriate/curl
-    hostname: test-client
-    depends_on:
-      - events-api
-    command: ["sh", "-c", "sleep 20 && curl -s http://events-api:8080/api/events/book/1"]
+  mysql-service-ticket:
+    container_name: mysql-service-ticket
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: "service-ticket"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password_root"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db:/var/lib/mysql-ticket
+    restart: always
     networks:
       - booking
+  mysql-service-bank:
+    container_name: mysql-service-bank
+    image: mysql:5.7
+    ports:
+      - "3307:3307"
+    expose:
+      - "3307"
+    environment:
+      MYSQL_DATABASE: "service-bank"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password_root"
+      MYSQL_TCP_PORT: "3307"
+    volumes:
+      - ./init-bank.sql:/docker-entrypoint-initdb.d/init.sql
+      - db:/var/lib/mysql-bank
+    restart: always
+    networks:
+      - booking
+  api-tickets:
+    hostname: api-tickets
+    build: ./service-ticket/
+    depends_on:
+      - mysql-service-ticket
+      - mysql-service-bank
+    container_name: api-tickets
+    ports:
+      - "3505:3505"
+    networks:
+      - booking
+    restart: always
+  api-bank:
+    hostname: api-bank
+    build: ./service-bank/
+    depends_on:
+      - mysql-service-ticket
+      - mysql-service-bank
+    container_name: api-bank
+    ports:
+      - "3506:3506"
+    networks:
+      - booking
+    restart: always
 
 volumes:
-    events-db:
-      name: events-db
+  db:
+  events-db:
+    name: events-db
 
 networks:
   booking:
+    external: true
     name: booking
 
 

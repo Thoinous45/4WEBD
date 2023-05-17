@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
-const nameDatabase = 'service-ticket';
+const nameDatabase = 'service-bank';
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
+    host: 'mysql-service-bank',
+    port: 3307,
     user: 'user',
     password: 'password',
     database: nameDatabase,
