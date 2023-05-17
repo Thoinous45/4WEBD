@@ -5,11 +5,14 @@ const checkIfCardIsAvailable = (numberCard, end_validity_date, cvv, callback) =>
     const values = [numberCard, end_validity_date, cvv]
     db.query(sql, values, (err, results) => {
         if (err) {
+            console.log("Oui il y a une erreur")
             callback(false)
         }
-        if (!results.length) {
+        if (results.length === 0) {
+            console.log("Oui il y a une erreur de longueur")
             callback(false)
         } else {
+            console.log("Non il n'y a pas d'erreur")
             const end_validity_date = results[0].end_validity_date.substring(0, 2) + "/01/" + results[0].end_validity_date.substring(3, 7)
 
             const dateCard = new Date(end_validity_date)
@@ -76,14 +79,14 @@ const makePayment = (req, res) => {
 
     checkIfCardIsAvailable(numberCard, end_validity_date, cvv, (result) => {
 
-        if (!result) return res.status(400).json({status: "false", message: "Card not found / Card not available"})
+        if (!result) return res.status(403).json({action: "false", message: "Card not found / Card not available"})
 
         checkIfHeCanBuy(numberCard, end_validity_date, cvv, price, (result) => {
-            if (!result) return res.status(400).json({status: "false", message: "You can't buy"})
+            if (!result) return res.status(403).json({action: "false", message: "You can't buy"})
 
             transaction(numberCard, end_validity_date, cvv, price, accountToTransfer, (result) => {
-                if (!result) return res.status(400).json({status: "false", message: "Transaction failed"})
-                return res.status(200).json({status: "true", message: "Transaction success"})
+                if (!result) return res.status(403).json({action: "false", message: "Transaction failed"})
+                return res.status(200).json({action: "true", message: "Transaction success"})
             })
         })
     })

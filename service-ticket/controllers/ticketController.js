@@ -95,24 +95,28 @@ const checkIfHeCanBuyTicket = async (price, numberCard, end_validity_date, cvv, 
     if (price === null || price === undefined) {
         callback(false)
     } else {
-        await Axios.post("http://api-bank:3506/api/payment", {
-            price: price,
-            numberCard: numberCard,
-            end_validity_date: end_validity_date,
-            cvv: cvv,
-            accountToTransfer: "2412751234123455"
-        }).then((response) => {
-            if (response) {
-                callback(response)
-            } else {
-                callback(false)
-            }
-        })
+        try {
+            await Axios.post("http://api-bank:3506/api/payment", {
+                price: price,
+                numberCard: numberCard,
+                end_validity_date: end_validity_date,
+                cvv: cvv,
+                accountToTransfer: "2412751234123455"
+            }).then((response) => {
+                if(response.status !== 200){
+                    callback(false)
+                } else {
+                    callback(true)
+                }
+            })
+        } catch (e) {
+            callback(false)
+        }
+
     }
 
 }
 const checkEvent = async (event_id, callback) => {
-    console.log('here')
     try {
         await Axios.get("http://events-api:8080/api/events/" + event_id).then((response) => {
             if (response.data) {
@@ -207,7 +211,7 @@ const createTicket = (req, res) => {
             checkIfHeCanBuyTicket(ticketPrice, numberCard, end_validity_date, cvv, async (result) => {
                 if (!result) {
                     userCantByTicket(event_id)
-                    return res.status(400).json({message: result.message})
+                    return res.status(403).json({message:"Payment refused"})
                 }
 
                 await insertTicket(user_id, firstname, lastname, event_id, email,startDate, "Carte bleue", event_name,ticketPrice, (result) => {
