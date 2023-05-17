@@ -10,8 +10,6 @@ const { beforeEach } = require("mocha");
 chai.should();
 chai.use(chaiHttp);
 
-process.env.Test_TOKEN_KEY;
-
 describe("Test User", () => {
   // get userid + token to use in other tests
   let testToken = "testToken";

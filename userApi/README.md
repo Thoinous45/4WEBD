@@ -22,6 +22,9 @@ _Pour générer la clé de chiffrement [voir ici](https://mkjwk.org/)_
 
 #### Vous pouvez utiliser l'API 👍
 
+## Test
+Vous pouvez lancer les tests unitaires avec `npm test`
+
 ## Endpoints
 http://localhost:3001/api/
 
