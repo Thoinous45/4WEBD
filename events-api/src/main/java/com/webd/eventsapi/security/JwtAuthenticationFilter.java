@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -29,12 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtTokenDecoder.isValidToken(token)) {
             String usernameFromToken = jwtTokenDecoder.getUsernameFromToken(token);
             String roleFromToken = jwtTokenDecoder.getRoleFromToken(token);
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(roleFromToken));
+            List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roleFromToken);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usernameFromToken, null, authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            request.setAttribute("roles", authorities);
         }
         filterChain.doFilter(request, response);
     }

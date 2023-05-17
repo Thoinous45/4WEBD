@@ -59,19 +59,16 @@ public class EventController {
     }
 
     @PostMapping
-    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
     }
 
     @PutMapping
-    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<Event> updateEvent(@RequestBody Event event) {
         return new ResponseEntity<>(eventService.updateEvent(event), HttpStatus.OK);
     }
 
     @DeleteMapping("/{eventId}")
-    @RolesAllowed("{OPERATOR}")
     public ResponseEntity<HttpStatus> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

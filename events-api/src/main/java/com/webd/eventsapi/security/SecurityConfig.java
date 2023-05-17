@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(GET, "/api/events/**", "/api/event-types/**").permitAll()
                 .requestMatchers(POST, "/api/events/search").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().hasAuthority("OPERATOR")
                 .and()
                 .build();
     }
