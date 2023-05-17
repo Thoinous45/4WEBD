@@ -95,7 +95,7 @@ const checkIfHeCanBuyTicket = async (price, numberCard, end_validity_date, cvv, 
     if (price === null || price === undefined) {
         callback(false)
     } else {
-        await Axios.post("http://api-tickets:3506/api/payment", {
+        await Axios.post("http://api-bank:3506/api/payment", {
             price: price,
             numberCard: numberCard,
             end_validity_date: end_validity_date,
