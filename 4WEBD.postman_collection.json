@@ -4,14 +4,14 @@
 		"name": "4WEBD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20586055",
-		"_collection_link": "https://solar-water-70498.postman.co/workspace/f5238114-e122-4647-b2f4-638a87d61874/collection/20586055-872bcbda-393a-41d8-a69f-8eaad645335b?action=share&creator=20586055&source=collection_link"
+		"_collection_link": "https://solar-water-70498.postman.co/workspace/Projet-WEB~f5238114-e122-4647-b2f4-638a87d61874/collection/20586055-872bcbda-393a-41d8-a69f-8eaad645335b?action=share&creator=20586055&source=collection_link"
 	},
 	"item": [
 		{
 			"name": "Tickets",
 			"item": [
 				{
-					"name": "http://localhost:3505/api/tickets",
+					"name": "Book and buy a ticket",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -30,7 +30,7 @@
 							"urlencoded": [
 								{
 									"key": "event_id",
-									"value": "1",
+									"value": "6",
 									"description": "Id envoyer depuis le front",
 									"type": "text"
 								},
@@ -41,7 +41,7 @@
 								},
 								{
 									"key": "end_validity_date",
-									"value": "02/2026",
+									"value": "02/2027",
 									"type": "text"
 								},
 								{
@@ -131,7 +131,7 @@
 									"variable": [
 										{
 											"key": "event_id",
-											"value": "10",
+											"value": "6",
 											"description": "Id of the event to retrieve"
 										}
 									]
@@ -190,7 +190,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "1",
+											"value": "7",
 											"description": "id of the event that has been booked to revert"
 										}
 									]
@@ -205,7 +205,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const name = \"1\";\r",
+											"const name = \"6\";\r",
 											"const address = \"paris\";\r",
 											"const isAvailable = true;\r",
 											"const eventTypeIds = [1, 2];\r",
@@ -215,7 +215,7 @@
 											"    \"nameContains\": name,\r",
 											"    \"addressContains\": null,\r",
 											"    \"isAvailable\": isAvailable,\r",
-											"    \"eventTypeIdsIn\": eventTypeIds,\r",
+											"    \"eventTypeIdsIn\": null,\r",
 											"    \"startDateEquals\": null\r",
 											"}\r",
 											"\r",
@@ -1224,13 +1224,13 @@
 		"type": "jwt",
 		"jwt": [
 			{
-				"key": "secret",
-				"value": "yF_0Q4yG1y1I8QucdiufhLItC5i5yKNL9908p8Qym3zAWHxDyjpfIzBgfIwL06c7mQMW2WWkAPowAhAhN-QDIvwivvyT9fMy1KhLIRQd_EY8RSd3VWsHU1jJsrDaC5pjMoVGxcyvNMBl-WG4CIT40vX54NiwUls3pJhzrvCOmKk",
+				"key": "payload",
+				"value": "{\r\n    \"userId\": \"123456789\",\r\n    \"userRight\": \"OPERATOR\"\r\n}",
 				"type": "string"
 			},
 			{
-				"key": "payload",
-				"value": "{\r\n    \"userId\": \"123456789\",\r\n    \"userRight\": \"OPERATOR\"\r\n}",
+				"key": "secret",
+				"value": "yF_0Q4yG1y1I8QucdiufhLItC5i5yKNL9908p8Qym3zAWHxDyjpfIzBgfIwL06c7mQMW2WWkAPowAhAhN-QDIvwivvyT9fMy1KhLIRQd_EY8RSd3VWsHU1jJsrDaC5pjMoVGxcyvNMBl-WG4CIT40vX54NiwUls3pJhzrvCOmKk",
 				"type": "string"
 			},
 			{
@@ -1293,6 +1293,10 @@
 		{
 			"key": "eventsBaseUrl",
 			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "req_body",
+			"value": ""
 		}
 	]
 }
