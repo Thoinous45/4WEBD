@@ -180,7 +180,7 @@ const createTicket = (req, res) => {
     const event_id = req.body.event_id
 
     checkEvent(event_id, (result) => {
-        if (result.length === 0) {
+        if (result.length === 0 || result === false) {
             return res.status(400).json({message: "Event not found"})
         }
 
