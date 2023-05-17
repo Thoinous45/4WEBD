@@ -136,7 +136,6 @@ volumes:
 
 networks:
   booking:
-    external: true
     name: booking
 
 
